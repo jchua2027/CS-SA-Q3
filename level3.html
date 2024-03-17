@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
+<title>CS SA Q3 lvl3</title>
+
+<style>
+canvas {
+    width: 1000px;
+    height: 500px;
+    background-image: url("BG.jpg");
+    border: solid 2px black;
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+
+}
+#info {
+    text-align:center;
+    background-color: rgb(51, 177, 51);
+    font-family: Caveat Brush;
+    font-size: larger;
+}
+body {
+    background-color: rgba(112, 199, 71, 0.989);
+}
+.lvlbtn {
+    justify-content: center;
+    margin-left: 70px;
+    width: 200px;
+    font-family: Caveat Brush;
+    border-radius: 20px;
+}
+</style>
+</head>
+<body onload="startGame()" id="body" onkeydown="KBmove(event)" onkeyup="clearmove()">
+    <button class="lvlbtn" onclick="document.location = 'AboutTheDevelopers.html'">About the Developers</button><button class="lvlbtn" onclick="document.location = 'index.html'">Level 1 - Basics</button><button class="lvlbtn" onclick="document.location = 'level2.html'">Level 2 - Change of pace</button><button class="lvlbtn" onclick="document.location = 'level3.html'">Level 3 - I'm feelin lucky!</button><button class="lvlbtn" onclick="document.location = 'level4.html'">Level 4 - ULTRASKILLS</button>
+    <div id="info" class="container">
+    <h1>The Star Collector</h1>
+    <h3>Level Tip: Scout out the level's format before moving, doing so ensures that path you will take!<br>You can also spam the 'w' key to climb onto horizontal vines! </h3>
+    <div class="row">
+    <div class="col-sm-4">
+        <button id="controls" onclick="enablecontrols()"><u> &#8595; Controls &#8595;</u></button><br>
+        <div id="control_contents">
+        &nbsp;
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <button id="goal" onclick="enablegoal()"><u> &#8595; Goal &#8595;</u></button><br>
+        <div id="goal_contents">
+        &nbsp;
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <button id="structures" onclick="enablestructures()"><u> &#8595; Structures &#8595;</u></button><br>
+        <div id="structures_contents">
+        &nbsp;
+        </div>
+        Extra Settings: 
+        <button onclick="BGM.play()" class="lvlbtn">Enable Music</button>
+    </div>
+    </div>
+    </div>
+<script>
+var myGamePiece1;
+var ladder1;
+var ladder2;
+var ladder3;
+var endpoint;
+var block;
+var block2;
+var block3;
+var block4;
+var block5;
+var block6;
+var block7;
+var block8;
+var block9;
+var block10;
+var block11;
+var block12;
+var block13;
+var block14;
+var block15;
+var block16;
+var block17;
+var block18;
+var block19;
+var block20;
+var block21;
+var block22;
+var block23;
+var block24;
+var BGM;
+var Win;
+var Hit;
+var ygrav = -2;
+var randomspawn;
+function startGame() {
+    myGamePiece1 = new component(15, 25, "Totally_Mario.png", 140, 130, "image", "1");
+    ladder1 = new component(160, 15, "Vine_Horizontal.png", 140, 0, "image", "1");
+    ladder2 = new component(15, 160, "Vine.png", 140, 5, "image", "1");
+    ladder3 = new component(160, 15, "Vine_Horizontal.png", 0, 0, "image", "1");
+    endpoint = new component(25, 25, "WarpButton.png", 25, 125, "image", "1");
+    block = new component(25, 25, "Brick_Wall.PNG", 105, 125, "image", "1");
+    block2 = new component(25, 25, "Brick_Wall.PNG", 165, 125, "image", "1");
+    block3 = new component(25, 25, "Brick_Wall.PNG", 105, 100, "image", "1");
+    block4 = new component(25, 25, "Brick_Wall.PNG", 165, 100, "image", "1");
+    block5 = new component(25, 25, "Brick_Wall.PNG", 105, 75, "image", "1");
+    block6 = new component(25, 25, "Brick_Wall.PNG", 165, 75, "image", "1");
+    block7 = new component(25, 25, "Brick_Wall.PNG", 105, 50, "image", "1");
+    block8 = new component(25, 25, "Brick_Wall.PNG", 165, 50, "image", "1");
+    block9 = new component(25, 25, "Brick_Wall.PNG", 80, 50, "image", "1");
+    block10 = new component(25, 25, "Brick_Wall.PNG", 190, 50, "image", "1");
+    block11 = new component(25, 25, "Brick_Wall.PNG", 25, 50, "image", "1");
+    block12 = new component(25, 25, "Brick_Wall.PNG", 0, 50, "image", "1");
+    block13 = new component(25, 25, "Brick_Wall.PNG", 0, 75, "image", "1");
+    block14 = new component(25, 25, "Brick_Wall.PNG", 0, 100, "image", "1");
+    block15 = new component(25, 25, "Brick_Wall.PNG", 0, 125, "image", "1");
+    block16 = new component(25, 25, "Brick_Wall.PNG", 55, 125, "image", "1");
+    block17 = new component(25, 10, "Brick_Wall.PNG", 55, 115, "image", "1");
+    block18 = new component(25, 25, "Brick_Wall.PNG", 250, 50, "image", "1");
+    block19 = new component(25, 25, "Brick_Wall.PNG", 275, 50, "image", "1");
+    block20 = new component(25, 25, "Brick_Wall.PNG", 275, 75, "image", "1");
+    block21 = new component(25, 25, "Brick_Wall.PNG", 275, 100, "image", "1");
+    block22 = new component(25, 25, "Brick_Wall.PNG", 275, 125, "image", "1");
+    block23 = new component(25, 25, "Brick_Wall.PNG", 220, 125, "image", "1");
+    block24 = new component(25, 10, "Brick_Wall.PNG", 220, 115, "image", "1");
+    BGM = new sound("Level3Music.mp3");
+    Win = new sound("YippeeSFX.mp3");
+    Hit = new sound("BoowompSFX.mp3");
+    myGameArea.start();
+    document.getElementById('control_contents').innerHTML = "&nbsp;";
+    document.getElementById('goal_contents').innerHTML = "&nbsp;";
+    document.getElementById('structures_contents').innerHTML = "&nbsp;";
+    randomspawn = Math.floor(Math.random() * 4);
+    if (randomspawn == 0) {
+    endpoint.x = 27;
+    } else if (randomspawn == 1) {
+    endpoint.x = 80;
+    } else if (randomspawn == 2) {
+    endpoint.x = 193;
+    } else if (randomspawn == 3) {
+    endpoint.x = 247;
+    }
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 24);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+}
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }    
+}
+var ground = myGameArea.canvas.height - this.height;
+function component(width, height, color, x, y, type, place) {
+    this.type = type;
+    this.place = place;
+    if (type == "image") {
+        this.image = new Image();
+        this.image.src = color;
+    }
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;  
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (type == "image") {
+            ctx.drawImage(
+                this.image, 
+                this.x, 
+                this.y,
+                this.width, this.height
+                );
+        }
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (!myGamePiece1.collides(block) || !myGamePiece1.collides(block2) || !myGamePiece1.collides(block3) || !myGamePiece1.collides(block4) || !myGamePiece1.collides(block5) || !myGamePiece1.collides(block6) || !myGamePiece1.collides(block7) || !myGamePiece1.collides(block8) || !myGamePiece1.collides(block9) || !myGamePiece1.collides(block10) || !myGamePiece1.collides(block11) || !myGamePiece1.collides(block12) || !myGamePiece1.collides(block13) || !myGamePiece1.collides(block14) || !myGamePiece1.collides(block15) || !myGamePiece1.collides(block16) || !myGamePiece1.collides(block17) || !myGamePiece1.collides(block18) || !myGamePiece1.collides(block19) || !myGamePiece1.collides(block20) || !myGamePiece1.collides(block21) || !myGamePiece1.collides(block22) || !myGamePiece1.collides(block23) || !myGamePiece1.collides(block24)) {
+        myGamePiece1.y += 1;
+        } else {
+        this.speedY = 0;
+        }
+        var ground = myGameArea.canvas.height - this.height;
+        if (this.y > ground) {
+            this.y = ground;
+            ygrav = -3;
+        }
+        if (myGamePiece1.collides(block) || myGamePiece1.collides(block2) || myGamePiece1.collides(block3) || myGamePiece1.collides(block4) || myGamePiece1.collides(block5) || myGamePiece1.collides(block6) || myGamePiece1.collides(block7) || myGamePiece1.collides(block8) || myGamePiece1.collides(block9) || myGamePiece1.collides(block10) || myGamePiece1.collides(block11) || myGamePiece1.collides(block12) || myGamePiece1.collides(block13) || myGamePiece1.collides(block14) || myGamePiece1.collides(block15) || myGamePiece1.collides(block16) || myGamePiece1.collides(block17) || myGamePiece1.collides(block18) || myGamePiece1.collides(block19) || myGamePiece1.collides(block20) || myGamePiece1.collides(block21) || myGamePiece1.collides(block22) || myGamePiece1.collides(block23) || myGamePiece1.collides(block24)) {
+            Hit.play();
+            myGamePiece1.y = 130;
+            myGamePiece1.x = 140;
+            alert("you crashed into a spike wall! Click 'OK' to restart the level"); 
+            myGamePiece1.speedX = 0;
+            randomspawn = Math.floor(Math.random() * 4);
+        if (randomspawn == 0) {
+        endpoint.x = 27;
+        } else if (randomspawn == 1) {
+        endpoint.x = 80;
+        } else if (randomspawn == 2) {
+        endpoint.x = 193;
+        } else if (randomspawn == 3) {
+        endpoint.x = 247;
+        }
+        }
+    }
+    this.collides = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        hit = true;
+        if ((mybottom < othertop+2) || (mytop > otherbottom-2) || (myright < otherleft) || (myleft > otherright)) {
+            hit = false;
+        }
+        return hit;
+    }
+    this.hitsGround = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        hitGround = true;
+        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+            hitGround = false;
+        }
+        return hitGround;
+    }
+} 
+function updateGameArea() {
+    if (myGamePiece1.collides(ladder1) || myGamePiece1.collides(ladder2) || myGamePiece1.collides(ladder3)) {
+    myGameArea.clear();
+    myGamePiece1.newPos();
+    myGamePiece1.update();
+    ladder1.update();
+    ladder2.update();
+    ladder3.update();
+    endpoint.update();
+    block.update();
+    block2.update();
+    block3.update();
+    block4.update();
+    block5.update();
+    block6.update();
+    block7.update();
+    block8.update();
+    block9.update();
+    block10.update();
+    block11.update();
+    block12.update();
+    block13.update();
+    block14.update();
+    block15.update();
+    block16.update();
+    block17.update();
+    block18.update();
+    block19.update();
+    block20.update();
+    block21.update();
+    block22.update();
+    block23.update();
+    block24.update();
+  } else {
+    myGamePiece1.speedY = 0;
+    myGameArea.clear();
+    myGamePiece1.newPos();
+    myGamePiece1.update();
+    ladder1.update();
+    ladder2.update();
+    ladder3.update();
+    endpoint.update();
+    block.update();
+    block2.update();
+    block3.update();
+    block4.update();
+    block5.update();
+    block6.update();
+    block7.update();
+    block8.update();
+    block9.update();
+    block10.update();
+    block11.update();
+    block12.update();
+    block13.update();
+    block14.update();
+    block15.update();
+    block16.update();
+    block17.update();
+    block18.update();
+    block19.update();
+    block20.update();
+    block21.update();
+    block22.update();
+    block23.update();
+    block24.update();
+    }
+    if (myGamePiece1.collides(endpoint)) {
+        Win.play();
+        myGamePiece1.image.src = "Totally_Mario_Win.png";
+        alert("you win! Close and reopen the game to play another level");
+        myGameArea.stop(); 
+        myGamePiece1.image.src = "Totally_Mario_Win.png";
+        document.location = 'level4.html';
+    }
+    }
+function KBmove(event) {
+    event = event.key;
+    if(event == 'w' || event == 'W') {
+    myGamePiece1.speedY = ygrav;
+    myGamePiece1.image.src = "Totally_Mario_Jumping.png";
+    }
+    if(event == 's' || event == 'S') {
+    myGamePiece1.speedY = 2;
+    }
+    if(event == 'd' || event == 'D'){
+    myGamePiece1.speedX = 1.5;
+    myGamePiece1.image.src = "Totally_Mario.png";
+    } 
+    if (event == 'a' || event == 'A') {
+    myGamePiece1.speedX = -1.5;
+    myGamePiece1.image.src = "Totally_Mario_Inverted.png";
+    }
+    if (event == 'e' || event == 'E') {
+    myGamePiece1.speedX = 0;
+    }
+}
+function clearmove() {
+    myGamePiece1.speedY = 0; 
+}
+function enablecontrols() {
+    if (document.getElementById('control_contents').innerHTML === '&nbsp;') {
+        document.getElementById('control_contents').innerHTML = "<h2>left and right : 'a' and 'd' keys<br>(You dont stop moving when you release the keys, click 'e' to stop all movements)<br>climb vines : 'w' key <br>Stop moving : 'e' key <br></h2>";
+    } else {
+        document.getElementById('control_contents').innerHTML = "&nbsp;";
+    }
+}
+function enablegoal() {
+    if (document.getElementById('goal_contents').innerHTML === '&nbsp;') {
+        document.getElementById('goal_contents').innerHTML = "<h2>Get to the '<img src='WarpButton.png' height='30' width='30' alt=''> Star Block' while safely going through the level<br></h2>";
+    } else {
+        document.getElementById('goal_contents').innerHTML = "&nbsp;";   
+    }
+}
+function enablestructures() {
+    if (document.getElementById('structures_contents').innerHTML === '&nbsp;') {
+        document.getElementById('structures_contents').innerHTML = "<h2>'<img src='Vine_small.png' height='30' width='30' alt=''> Vines' act as something you can climb on to avoid obstacles <br>'<img src='Brick_Wall.PNG' height='30' width='30' alt=''> Spike Walls' can hit you from all sides, look out for this dangerous block!<br>The '<img src='WarpButton.png' height='30' width='30' alt=''> Star Block' is the end of each level. Sometimes when you hit a spike wall, it's position will move at random if it feels silly :3</h2>";
+    } else {
+        document.getElementById('structures_contents').innerHTML = "&nbsp;";   
+    }
+}
+</script>
+
+
+</body>
+
+</html>
